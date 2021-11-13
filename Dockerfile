@@ -1,6 +1,8 @@
 FROM ubuntu
-RUN apt update && apt upgrade -y
-RUN apt install wget curl -y
-RUN wget https://updates.peer2profit.com/p2pclient && chmod a+x p2pclient
-VOLUME [ "/root/.config" ]
-ENTRYPOINT [ "./p2pclient", "--login"]
+RUN apt update && apt install wget curl -y
+
+WORKDIR /app
+RUN wget -q https://updates.peer2profit.com/p2pclient_0.56_amd64.deb && \
+apt install ./p2pclient_0.56_amd64.deb -y
+VOLUME [/root/.config]
+ENTRYPOINT ["p2pclient" "--login"]

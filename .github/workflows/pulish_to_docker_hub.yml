@@ -1,0 +1,36 @@
+name: Publish Multiarch Image
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Login to Docker Hub
+        env:
+          DOCKER_USER: ${{secrets.DOCKER_USER}}
+          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+        run: |
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+
+      - name: Build & Push
+        run: |
+          docker build --push \
+          -t fazalfarhan01/peer2profit:latest \
+          -t fazalfarhan01/peer2profit:0.56 .
+
+      - name: Update Docker Hub Readme
+        uses: peter-evans/dockerhub-description@v2
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: fazalfarhan01/peer2profit
+          short-description: Containerised version of Peer2Profit
+          readme-filepath: README.md
