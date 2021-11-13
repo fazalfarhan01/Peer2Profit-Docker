@@ -20,11 +20,15 @@ jobs:
         run: |
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
 
-      - name: Build & Push
+      - name: Build Image
         run: |
-          docker build --push \
+          docker build \
           -t fazalfarhan01/peer2profit:latest \
           -t fazalfarhan01/peer2profit:0.56 .
+      
+      - name: Push Image
+        run: |
+          docker push -a fazalfarhan01/peer2profit
 
       - name: Update Docker Hub Readme
         uses: peter-evans/dockerhub-description@v2
